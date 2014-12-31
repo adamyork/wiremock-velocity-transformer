@@ -1,0 +1,21 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+
+sourceCompatibility = 1.6
+version = "0.1"
+
+jar {
+    manifest {
+        attributes "Implementation-Title" : "wiremock-velocity-extension",
+                   "Implementation-Version" : version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: "org.apache.velocity", name: "velocity", version: "1.7"
+    //compile group: "com.github.tomakehurst", name: "wiremock", version: "1.52"
+}
