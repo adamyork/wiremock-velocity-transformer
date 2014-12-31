@@ -9,6 +9,11 @@ jar {
         attributes "Implementation-Title" : "wiremock-velocity-extension",
                    "Implementation-Version" : version
     }
+    from { 
+        configurations.compile.collect { 
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
 
 repositories {
@@ -18,4 +23,16 @@ repositories {
 dependencies {
     compile group: "org.apache.velocity", name: "velocity", version: "1.7"
     //compile group: "com.github.tomakehurst", name: "wiremock", version: "1.52"
+    compile files( "lib/wiremock-1.52.jar" )
+    compile "org.mortbay.jetty:jetty:6.1.26"
+    compile "com.google.guava:guava:18.0"
+    compile "com.fasterxml.jackson.core:jackson-core:2.4.2",
+            "com.fasterxml.jackson.core:jackson-annotations:2.4.2",
+            "com.fasterxml.jackson.core:jackson-databind:2.4.2"
+    compile "org.apache.httpcomponents:httpclient:4.3.5"
+    compile "org.skyscreamer:jsonassert:1.2.3"
+    compile "xmlunit:xmlunit:1.5"
+    compile "com.jayway.jsonpath:json-path:0.8.1"
+    compile "org.slf4j:slf4j-api:1.7.6"
+    compile "net.sf.jopt-simple:jopt-simple:4.7"
 }

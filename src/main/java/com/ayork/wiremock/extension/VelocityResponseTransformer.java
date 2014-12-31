@@ -17,9 +17,10 @@ import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 
 public class VelocityResponseTransformer extends ResponseTransformer {
 
-    private static final String NAME = "velocityResponseTransformer";
+    private static final String NAME = "com.ayork.wiremock.extension.VelocityResponseTransformer";
 
     private VelocityContext context;
+    private FileSource fileSource;
 
     @Override
     public String name() {
@@ -28,9 +29,11 @@ public class VelocityResponseTransformer extends ResponseTransformer {
 
     @Override
     public ResponseDefinition transform(final Request request,
-            final ResponseDefinition response) {
+                                        final ResponseDefinition response,
+                                        final FileSource fileSource) {
         if (response.specifiesBodyFile() && templateDeclared(response)) {
             context = new VelocityContext();
+            this.fileSource = fileSource;
             addBodyToContext(request.getBodyAsString());
             addHeadersToContext(request.getHeaders());
             context.put("requestAbsoluteUrl", request.getAbsoluteUrl());
