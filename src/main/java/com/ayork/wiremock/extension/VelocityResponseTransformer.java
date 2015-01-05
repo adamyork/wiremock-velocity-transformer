@@ -59,6 +59,7 @@ public class VelocityResponseTransformer extends ResponseTransformer {
 
     private void addBodyToContext(final String body) {
         if (!body.isEmpty() && body != null) {
+            System.out.println("line 67");
             context.put("requestBody", body);
         }
     }
@@ -70,6 +71,7 @@ public class VelocityResponseTransformer extends ResponseTransformer {
         template.merge(context, writer);
         final byte[] fileBytes = String.valueOf(writer.getBuffer()).getBytes();
         response.setBody(fileBytes);
+        response.setBodyFileName(null);
     }
 
 }
