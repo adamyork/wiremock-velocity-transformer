@@ -1,0 +1,17 @@
+{
+    "requestAbsoluteUrl" : "$requestAbsoluteUrl",
+    "requestBody" : "$requestBody",
+    "requestMethod" : "$requestMethod",
+    "requestHeaderHost" : "$requestHeaderHost",
+    "requestHeaderUserAgent" : "$requestHeaderUserAgent",
+    "requestHeaderAcceptAccept" : "$requestHeaderAccept",
+    "requestHeaderAcceptLanguage" : "$requestHeaderAcceptLanguage",
+    "requestHeaderAcceptEncoding" : "$requestHeaderAcceptEncoding",
+    "requestHeaderConnection" : "$requestHeaderConnection",
+    #if($requestAbsoluteUrl == 'http://localhost:8089/my/resource')
+"customProp" : "customValue",
+"customProp2" : "customValue2"
+    #else
+"customProp" : "customValue"
+    #end
+}

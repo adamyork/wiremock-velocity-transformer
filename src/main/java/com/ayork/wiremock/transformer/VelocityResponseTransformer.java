@@ -1,4 +1,4 @@
-package com.ayork.wiremock.extension;
+package com.ayork.wiremock.transformer;
 
 import java.io.StringWriter;
 import java.util.regex.Matcher;
@@ -52,14 +52,15 @@ public class VelocityResponseTransformer extends ResponseTransformer {
 
     private void addHeadersToContext(final HttpHeaders headers) {
         for (HttpHeader header : headers.all()) {
-            context.put("requestHeader".concat(header.key()), header.values()
+            final String rawKey = header.key();
+            final String transformedKey = rawKey.replaceAll("-", "");
+            context.put("requestHeader".concat(transformedKey), header.values()
                     .toString());
         }
     }
 
     private void addBodyToContext(final String body) {
         if (!body.isEmpty() && body != null) {
-            System.out.println("line 67");
             context.put("requestBody", body);
         }
     }
