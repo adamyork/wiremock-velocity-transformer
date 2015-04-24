@@ -7,6 +7,24 @@ transformer used to render velocity templates for stubbed responses.
 
 - Include wiremock-velocity-transformer in your project
 
+Maven
+
+````
+<dependency>
+  <groupId>com.github.radadam</groupId>
+  <artifactId>wiremock-velocity-transformer</artifactId>
+  <version>1.1</version>
+</dependency>
+````
+
+Gradle 
+
+````
+dependencies {
+    compile group: "com.github.radadam", name: "wiremock-velocity-transformer", version: "1.1"
+}
+````
+
 - Follow the wiremock documentation for extending :
 
 [http://wiremock.org/extending-wiremock.html](http://wiremock.org/extending-wiremock.html)
