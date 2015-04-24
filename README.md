@@ -29,7 +29,7 @@ dependencies {
 
 [http://wiremock.org/extending-wiremock.html](http://wiremock.org/extending-wiremock.html)
 
-- Download the [velocity transformer jar ](https://github.com/radAdam/wiremock-velocity-transformer/releases/download/1.0/wiremock-velocity-transformer-1.0.jar)
+- Download the [velocity transformer jar ](https://github.com/radAdam/wiremock-velocity-transformer/releases/download/1.1/wiremock-velocity-transformer-1.1.jar)
 - Register the velocity transformer with wiremock. For example :
 
 ````java
