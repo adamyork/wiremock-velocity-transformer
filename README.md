@@ -15,7 +15,7 @@ transformer used to render velocity templates for stubbed responses.
 - Register the velocity transformer with wiremock. For example :
 
 ````java
-new WireMockServer(wireMockConfig().extensions("com.ayork.wiremock.VelocityResponseTransformer",));
+new WireMockServer(wireMockConfig().extensions("com.github.radadam.wiremock.transformer.VelocityResponseTransformer",));
 
 or
 
@@ -36,5 +36,5 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 ````
-java -cp "wiremock-velocity-transformer-standalone-1.0.jar:wiremock-1.53-standalone.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.ayork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-velocity-transformer-standalone-1.1.jar:wiremock-1.55-standalone.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.radadam.wiremock.transformer.VelocityResponseTransformer
 ````
