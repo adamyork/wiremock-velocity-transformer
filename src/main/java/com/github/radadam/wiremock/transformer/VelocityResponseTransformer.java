@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+import org.apache.velocity.tools.ToolManager;
 
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
@@ -30,7 +32,7 @@ public class VelocityResponseTransformer extends ResponseTransformer {
      * The Velocity context that will hold our request header
      * data.
      */
-    private VelocityContext context;
+    private Context context;
     
     /**
      * The template
@@ -53,7 +55,11 @@ public class VelocityResponseTransformer extends ResponseTransformer {
                                         final ResponseDefinition response,
                                         final FileSource fileSource) {
         if (response.specifiesBodyFile() && templateDeclared(response)) {
-            context = new VelocityContext();
+            VelocityEngine velocityEngine = new VelocityEngine();
+            velocityEngine.init();
+            final ToolManager toolManager = new ToolManager();
+            toolManager.setVelocityEngine(velocityEngine);
+            context = toolManager.createContext();
             this.fileSource = fileSource;
             addBodyToContext(request.getBodyAsString());
             addHeadersToContext(request.getHeaders());

@@ -21,7 +21,7 @@ Gradle
 
 ````
 dependencies {
-    compile group: "com.github.radadam", name: "wiremock-velocity-transformer", version: "1.1"
+    compile group: "com.github.radadam", name: "wiremock-velocity-transformer", version: "1.2"
 }
 ````
 
@@ -43,7 +43,7 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 ## To use in conjuction with Wiremock Standalone Jar
 
-- Download the [standalone velocity transformer jar ](https://github.com/radAdam/wiremock-velocity-transformer/releases/download/1.1/wiremock-velocity-transformer-standalone-1.1.jar)
+- Download the [standalone velocity transformer jar ](https://github.com/radAdam/wiremock-velocity-transformer/releases/download/1.2/wiremock-velocity-transformer-standalone-1.2.jar)
 
 - Download the Wiremock standalone jar from :
 
@@ -51,5 +51,5 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 ````
-java -cp "wiremock-velocity-transformer-standalone-1.1.jar:wiremock-1.55-standalone.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.radadam.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-velocity-transformer-standalone-1.2.jar:wiremock-1.57-standalone.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.radadam.wiremock.transformer.VelocityResponseTransformer
 ````

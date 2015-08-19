@@ -8,6 +8,8 @@
     "requestHeaderAcceptLanguage" : "$requestHeaderAcceptLanguage",
     "requestHeaderAcceptEncoding" : "$requestHeaderAcceptEncoding",
     "requestHeaderConnection" : "$requestHeaderConnection",
+    "date" : "$date",
+    "math": "$math.round(22.2)",
     #if($requestAbsoluteUrl == 'http://localhost:8089/my/resource')
 "customProp" : "customValue",
 "customProp2" : "customValue2"
