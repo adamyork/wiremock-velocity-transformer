@@ -8,11 +8,11 @@ apply plugin: "eclipse"
 apply plugin: "maven"
 apply plugin: "signing"
 
-group = "com.github.radadam"
+group = "com.github.adamyork"
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
-version = "1.2"
+version = "1.3"
 
 fatJar {
     archiveName = "wiremock-velocity-transformer-standalone-" + fatJar.version + ".jar"
@@ -23,7 +23,7 @@ fatJar {
 }
 
 task cleanFunctional(type: Delete) {
-    delete fileTree(dir: "functional", include: "*-velocity-transformer-*.jar", exclude: "wiremock-1.55-standalone.jar")
+    delete fileTree(dir: "functional", include: "*-velocity-transformer-*.jar", exclude: "wiremock-1.57-standalone.jar")
 }
 
 task copyFunctional(type: Copy) {
@@ -49,7 +49,7 @@ jar {
     dependsOn copyFunctional
     cleanFunctional.shouldRunAfter fatJar
     copyFunctional.dependsOn cleanFunctional
-    copyFunctional.shouldRunAfter cleanFunctional
+    copyFunctional.shouldRunAfter jar
     archiveName = "wiremock-velocity-transformer-" + jar.version + ".jar"
     manifest {
         attributes "Implementation-Title"   : "wiremock-velocity-transformer",
@@ -121,12 +121,12 @@ uploadArchives {
                name "wiremock-velocity-transformer"
                packaging "jar"
                description "transformer used to render velocity templates for stubbed responses."
-               url "https://github.com/radAdam/wiremock-velocity-transformer"
+               url "https://github.com/adamyork/wiremock-velocity-transformer"
  
                scm {
-                   url "scm:git@github.com:radAdam/wiremock-velocity-transformer.git"
-                   connection "scm:git@github.com:radAdam/wiremock-velocity-transformer.git"
-                   developerConnection "scm:git@github.com:radAdam/wiremock-velocity-transformer.git"
+                   url "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
+                   connection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
+                   developerConnection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
                }
  
                licenses {
