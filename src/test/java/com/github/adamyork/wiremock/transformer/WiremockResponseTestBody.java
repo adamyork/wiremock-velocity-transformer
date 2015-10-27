@@ -1,4 +1,4 @@
-package com.github.adamyork.wiremock.trasnformer;
+package com.github.adamyork.wiremock.transformer;
 
 public class WiremockResponseTestBody {
     
