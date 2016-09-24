@@ -18,10 +18,12 @@ package com.github.tomakehurst.wiremock.testsupport;
 import com.github.tomakehurst.wiremock.common.TextFile;
 import com.github.tomakehurst.wiremock.http.HttpHeader;
 import com.google.common.base.Predicate;
-import net.sf.json.test.JSONAssert;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +46,28 @@ public class WireMatchers {
 			@Override
 			public boolean matchesSafely(String actualJson) {
 				try {
-					JSONAssert.assertJsonEquals(expectedJson, actualJson);
+					JSONAssert.assertEquals(expectedJson, actualJson, JSONCompareMode.STRICT);
+					return true;
+				} catch (Throwable e) {
+					return false;
+				}
+			}
+
+		};
+	}
+
+	public static Matcher<String> equalToJson(final String expectedJson, final JSONCompareMode jsonCompareMode) {
+		return new TypeSafeMatcher<String>() {
+
+			@Override
+			public void describeTo(Description desc) {
+				desc.appendText("Expected:\n" + expectedJson);
+			}
+
+			@Override
+			public boolean matchesSafely(String actualJson) {
+				try {
+					JSONAssert.assertEquals(expectedJson, actualJson, jsonCompareMode);
 					return true;
 				} catch (Throwable e) {
 					return false;
@@ -71,6 +94,7 @@ public class WireMatchers {
         };
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> hasExactly(final Matcher<T>... items) {
     	return new TypeSafeMatcher<Iterable<T>>() {
 
@@ -94,6 +118,7 @@ public class WireMatchers {
     	};
     }
     
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> hasExactlyIgnoringOrder(final Matcher<T>... items) {
     	return new TypeSafeMatcher<Iterable<T>>() {
 
