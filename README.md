@@ -13,7 +13,7 @@ Maven
 <dependency>
   <groupId>com.github.adamyork</groupId>
   <artifactId>wiremock-velocity-transformer</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 ````
 
@@ -21,7 +21,7 @@ Gradle
 
 ````
 dependencies {
-    compile group: "com.github.adamyork", name: "wiremock-velocity-transformer", version: "1.3"
+    compile group: "com.github.adamyork", name: "wiremock-velocity-transformer", version: "1.4"
 }
 ````
 
@@ -51,5 +51,5 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 ````
-java -cp "wiremock-velocity-transformer-standalone-1.3.jar:wiremock-1.57-standalone.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-velocity-transformer-standalone-1.4.jar:wiremock-standalone-2.1.12.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
 ````
