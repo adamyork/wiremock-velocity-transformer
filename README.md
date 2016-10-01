@@ -47,7 +47,7 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 - Download the Wiremock standalone jar from :
 
-[http://wiremock.org/running-standalone.html#running-standalone](http://wiremock.org/running-standalone.html#running-standalone)
+[http://wiremock.org/docs/running-standalone/](http://wiremock.org/docs/running-standalone/)
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 ````
