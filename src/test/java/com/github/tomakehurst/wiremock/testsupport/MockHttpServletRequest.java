@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -41,37 +40,37 @@ import java.util.Map;
 
 public class MockHttpServletRequest implements HttpServletRequest {
 
-	@Override
-	public Object getAttribute(String name) {
-		
-		return null;
-	}
+    @Override
+    public Object getAttribute(String name) {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Enumeration getAttributeNames() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getCharacterEncoding() {
-		
-		return null;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enumeration getAttributeNames() {
 
-	@Override
-	public void setCharacterEncoding(String env)
-			throws UnsupportedEncodingException {
-		
-		
-	}
+        return null;
+    }
 
-	@Override
-	public int getContentLength() {
-		
-		return 0;
-	}
+    @Override
+    public String getCharacterEncoding() {
+
+        return null;
+    }
+
+    @Override
+    public void setCharacterEncoding(String env)
+            throws UnsupportedEncodingException {
+
+
+    }
+
+    @Override
+    public int getContentLength() {
+
+        return 0;
+    }
 
     @Override
     public long getContentLengthLong() {
@@ -79,151 +78,151 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-	public String getContentType() {
-		
-		return null;
-	}
+    public String getContentType() {
 
-	@Override
-	public ServletInputStream getInputStream() throws IOException {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getParameter(String name) {
-		
-		return null;
-	}
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Enumeration getParameterNames() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String[] getParameterValues(String name) {
-		
-		return null;
-	}
+    @Override
+    public String getParameter(String name) {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Map getParameterMap() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getProtocol() {
-		
-		return null;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enumeration getParameterNames() {
 
-	@Override
-	public String getScheme() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getServerName() {
-		
-		return null;
-	}
+    @Override
+    public String[] getParameterValues(String name) {
 
-	@Override
-	public int getServerPort() {
-		
-		return 0;
-	}
+        return null;
+    }
 
-	@Override
-	public BufferedReader getReader() throws IOException {
-		
-		return null;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Map getParameterMap() {
 
-	@Override
-	public String getRemoteAddr() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getRemoteHost() {
-		
-		return null;
-	}
+    @Override
+    public String getProtocol() {
 
-	@Override
-	public void setAttribute(String name, Object o) {
-		
-		
-	}
+        return null;
+    }
 
-	@Override
-	public void removeAttribute(String name) {
-		
-		
-	}
+    @Override
+    public String getScheme() {
 
-	@Override
-	public Locale getLocale() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Enumeration getLocales() {
-		
-		return null;
-	}
+    @Override
+    public String getServerName() {
 
-	@Override
-	public boolean isSecure() {
-		
-		return false;
-	}
+        return null;
+    }
 
-	@Override
-	public RequestDispatcher getRequestDispatcher(String path) {
-		
-		return null;
-	}
+    @Override
+    public int getServerPort() {
 
-	@Override
-	public String getRealPath(String path) {
-		
-		return null;
-	}
+        return 0;
+    }
 
-	@Override
-	public int getRemotePort() {
-		
-		return 0;
-	}
+    @Override
+    public BufferedReader getReader() throws IOException {
 
-	@Override
-	public String getLocalName() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getLocalAddr() {
-		
-		return null;
-	}
+    @Override
+    public String getRemoteAddr() {
 
-	@Override
-	public int getLocalPort() {
-		
-		return 0;
-	}
+        return null;
+    }
+
+    @Override
+    public String getRemoteHost() {
+
+        return null;
+    }
+
+    @Override
+    public void setAttribute(String name, Object o) {
+
+
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+
+
+    }
+
+    @Override
+    public Locale getLocale() {
+
+        return null;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enumeration getLocales() {
+
+        return null;
+    }
+
+    @Override
+    public boolean isSecure() {
+
+        return false;
+    }
+
+    @Override
+    public RequestDispatcher getRequestDispatcher(String path) {
+
+        return null;
+    }
+
+    @Override
+    public String getRealPath(String path) {
+
+        return null;
+    }
+
+    @Override
+    public int getRemotePort() {
+
+        return 0;
+    }
+
+    @Override
+    public String getLocalName() {
+
+        return null;
+    }
+
+    @Override
+    public String getLocalAddr() {
+
+        return null;
+    }
+
+    @Override
+    public int getLocalPort() {
+
+        return 0;
+    }
 
     @Override
     public ServletContext getServletContext() {
@@ -261,132 +260,132 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-	public String getAuthType() {
-		
-		return null;
-	}
+    public String getAuthType() {
 
-	@Override
-	public Cookie[] getCookies() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public long getDateHeader(String name) {
-		
-		return 0;
-	}
+    @Override
+    public Cookie[] getCookies() {
 
-	@Override
-	public String getHeader(String name) {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Enumeration getHeaders(String name) {
-		
-		return null;
-	}
+    @Override
+    public long getDateHeader(String name) {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public Enumeration getHeaderNames() {
-		
-		return null;
-	}
+        return 0;
+    }
 
-	@Override
-	public int getIntHeader(String name) {
-		
-		return 0;
-	}
+    @Override
+    public String getHeader(String name) {
 
-	@Override
-	public String getMethod() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getPathInfo() {
-		
-		return null;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enumeration getHeaders(String name) {
 
-	@Override
-	public String getPathTranslated() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getContextPath() {
-		
-		return null;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enumeration getHeaderNames() {
 
-	@Override
-	public String getQueryString() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getRemoteUser() {
-		
-		return null;
-	}
+    @Override
+    public int getIntHeader(String name) {
 
-	@Override
-	public boolean isUserInRole(String role) {
-		
-		return false;
-	}
+        return 0;
+    }
 
-	@Override
-	public Principal getUserPrincipal() {
-		
-		return null;
-	}
+    @Override
+    public String getMethod() {
 
-	@Override
-	public String getRequestedSessionId() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getRequestURI() {
-		
-		return null;
-	}
+    @Override
+    public String getPathInfo() {
 
-	@Override
-	public StringBuffer getRequestURL() {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String getServletPath() {
-		
-		return null;
-	}
+    @Override
+    public String getPathTranslated() {
 
-	@Override
-	public HttpSession getSession(boolean create) {
-		
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public HttpSession getSession() {
-		
-		return null;
-	}
+    @Override
+    public String getContextPath() {
+
+        return null;
+    }
+
+    @Override
+    public String getQueryString() {
+
+        return null;
+    }
+
+    @Override
+    public String getRemoteUser() {
+
+        return null;
+    }
+
+    @Override
+    public boolean isUserInRole(String role) {
+
+        return false;
+    }
+
+    @Override
+    public Principal getUserPrincipal() {
+
+        return null;
+    }
+
+    @Override
+    public String getRequestedSessionId() {
+
+        return null;
+    }
+
+    @Override
+    public String getRequestURI() {
+
+        return null;
+    }
+
+    @Override
+    public StringBuffer getRequestURL() {
+
+        return null;
+    }
+
+    @Override
+    public String getServletPath() {
+
+        return null;
+    }
+
+    @Override
+    public HttpSession getSession(boolean create) {
+
+        return null;
+    }
+
+    @Override
+    public HttpSession getSession() {
+
+        return null;
+    }
 
     @Override
     public String changeSessionId() {
@@ -394,28 +393,28 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-	public boolean isRequestedSessionIdValid() {
-		
-		return false;
-	}
+    public boolean isRequestedSessionIdValid() {
 
-	@Override
-	public boolean isRequestedSessionIdFromCookie() {
-		
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public boolean isRequestedSessionIdFromURL() {
-		
-		return false;
-	}
+    @Override
+    public boolean isRequestedSessionIdFromCookie() {
 
-	@Override
-	public boolean isRequestedSessionIdFromUrl() {
-		
-		return false;
-	}
+        return false;
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromURL() {
+
+        return false;
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromUrl() {
+
+        return false;
+    }
 
     @Override
     public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {

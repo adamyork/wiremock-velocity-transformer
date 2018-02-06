@@ -1,19 +1,18 @@
 {
-    "requestAbsoluteUrl" : "$requestAbsoluteUrl",
-    "requestBody" : "$requestBody",
-    "requestMethod" : "$requestMethod",
-    "requestHeaderHost" : "$requestHeaderHost",
-    "requestHeaderUserAgent" : "$requestHeaderUserAgent",
-    "requestHeaderAcceptAccept" : "$requestHeaderAccept",
-    "requestHeaderAcceptLanguage" : "$requestHeaderAcceptLanguage",
-    "requestHeaderAcceptEncoding" : "$requestHeaderAcceptEncoding",
-    "requestHeaderConnection" : "$requestHeaderConnection",
-    #if($requestAbsoluteUrl == 'http://localhost:8089/my/resource')
+"requestAbsoluteUrl" : "$requestAbsoluteUrl",
+"requestMethod" : "$requestMethod",
+"requestHeaderHost" : "$requestHeaderHost",
+"requestHeaderUserAgent" : "$requestHeaderUserAgent",
+"requestHeaderAcceptAccept" : "$requestHeaderAccept",
+"requestHeaderAcceptLanguage" : "$requestHeaderAcceptLanguage",
+"requestHeaderAcceptEncoding" : "$requestHeaderAcceptEncoding",
+"requestHeaderConnection" : "$requestHeaderConnection",
+#if($requestAbsoluteUrl == 'http://localhost:8089/my/resource')
 "customProp" : "customValue",
 "customProp2" : "customValue2",
-    #else
+#else
 "customProp" : "customValue",
-    #end
-    "date" : "$date.getMonth()",
-    "math" : "$math.floor(2.5)"
+#end
+"date" : "$date.getMonth()",
+"math" : "$math.floor(2.5)"
 }

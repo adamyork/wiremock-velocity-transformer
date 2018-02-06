@@ -11,7 +11,12 @@
 hs_err_pid*
 .classpath
 .project
-.gradle
-.settings
-build
-/bin/
+.gradle/
+gradle/
+.settings/
+build/
+bin/
+.idea/
+gradlew
+gradlew.bat
+out/

@@ -1,0 +1,20 @@
+{
+"requestAbsoluteUrl" : "$requestAbsoluteUrl",
+"requestBody" : $requestBody,
+"requestBodySomeKeyValue" : "$requestBody.someKey",
+"requestMethod" : "$requestMethod",
+"requestHeaderHost" : "$requestHeaderHost",
+"requestHeaderUserAgent" : "$requestHeaderUserAgent",
+"requestHeaderAcceptAccept" : "$requestHeaderAccept",
+"requestHeaderAcceptLanguage" : "$requestHeaderAcceptLanguage",
+"requestHeaderAcceptEncoding" : "$requestHeaderAcceptEncoding",
+"requestHeaderConnection" : "$requestHeaderConnection",
+#if($requestAbsoluteUrl == 'http://localhost:8089/my/resource')
+"customProp" : "customValue",
+"customProp2" : "customValue2",
+#else
+"customProp" : "customValue",
+#end
+"date" : "$date.getMonth()",
+"math" : "$math.floor(2.5)"
+}

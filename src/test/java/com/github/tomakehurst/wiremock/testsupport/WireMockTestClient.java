@@ -24,11 +24,19 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -38,13 +46,14 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 
 import static com.github.tomakehurst.wiremock.common.Exceptions.throwUnchecked;
 import static com.github.tomakehurst.wiremock.http.MimeType.JSON;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.net.HttpURLConnection.HTTP_CREATED;
-import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
-import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.*;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.http.entity.ContentType.APPLICATION_XML;
 
 public class WireMockTestClient {
 
@@ -54,6 +63,7 @@ public class WireMockTestClient {
     private static final String LOCAL_WIREMOCK_EDIT_RESPONSE_URL = "http://%s:%d/__admin/mappings/edit";
     private static final String LOCAL_WIREMOCK_RESET_URL = "http://%s:%d/__admin/reset";
     private static final String LOCAL_WIREMOCK_RESET_DEFAULT_MAPPINS_URL = "http://%s:%d/__admin/mappings/reset";
+    private static final String LOCAL_WIREMOCK_SNAPSHOT_PATH = "/__admin/recordings/snapshot";
 
     private int port;
     private String address;
@@ -71,28 +81,6 @@ public class WireMockTestClient {
         this(8080);
     }
 
-    private String mockServiceUrlFor(String path) {
-        return String.format(LOCAL_WIREMOCK_ROOT, address, port, path);
-    }
-
-    private String newMappingUrl() {
-        return String.format(LOCAL_WIREMOCK_NEW_RESPONSE_URL, address, port);
-    }
-
-    private String editMappingUrl() {
-        return String.format(LOCAL_WIREMOCK_EDIT_RESPONSE_URL, address, port);
-    }
-    private String removeMappingUrl() {
-        return String.format(LOCAL_WIREMOCK_REMOVE_RESPONSE_URL, address, port);
-    }
-    private String resetUrl() {
-        return String.format(LOCAL_WIREMOCK_RESET_URL, address, port);
-    }
-
-    private String resetDefaultMappingsUrl() {
-        return String.format(LOCAL_WIREMOCK_RESET_DEFAULT_MAPPINS_URL, address, port);
-    }
-
     public WireMockResponse get(String url, TestHttpHeader... headers) {
         String actualUrl = URI.create(url).isAbsolute() ? url : mockServiceUrlFor(url);
         HttpUriRequest httpRequest = new HttpGet(actualUrl);
@@ -107,17 +95,17 @@ public class WireMockTestClient {
         URI targetUri = URI.create(url);
         HttpHost proxy = new HttpHost(address, proxyPort, targetUri.getScheme());
         HttpClient httpClientUsingProxy = HttpClientBuilder.create()
-            .disableAuthCaching()
-            .disableAutomaticRetries()
-            .disableCookieManagement()
-            .disableRedirectHandling()
-            .setProxy(proxy)
-            .build();
+                .disableAuthCaching()
+                .disableAutomaticRetries()
+                .disableCookieManagement()
+                .disableRedirectHandling()
+                .setProxy(proxy)
+                .build();
 
         try {
             HttpHost target = new HttpHost(targetUri.getHost(), targetUri.getPort(), targetUri.getScheme());
             HttpGet req = new HttpGet(targetUri.getPath() +
-                (isNullOrEmpty(targetUri.getQuery()) ? "" : "?" + targetUri.getQuery()));
+                    (isNullOrEmpty(targetUri.getQuery()) ? "" : "?" + targetUri.getQuery()));
             req.removeHeaders("Host");
 
             System.out.println("executing request to " + targetUri + "(" + target + ") via " + proxy);
@@ -143,14 +131,20 @@ public class WireMockTestClient {
         return requestWithBody(httpPatch, body, contentType, headers);
     }
 
-    private WireMockResponse requestWithBody(
-        HttpEntityEnclosingRequestBase request, String body, String contentType, TestHttpHeader... headers) {
-        request.setEntity(new StringEntity(body, ContentType.create(contentType, "utf-8")));
-        return executeMethodAndConvertExceptions(request, headers);
-    }
-
     public WireMockResponse postWithBody(String url, String body, String bodyMimeType, String bodyEncoding) {
         return post(url, new StringEntity(body, ContentType.create(bodyMimeType, bodyEncoding)));
+    }
+
+    public WireMockResponse postWithMultiparts(String url, Collection<MultipartBody> parts, TestHttpHeader... headers) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        if(parts != null) {
+            for (MultipartBody part : parts) {
+                builder.addPart(part.getFilename(), part);
+            }
+        }
+
+        return post(url, builder.build(), headers);
     }
 
     public WireMockResponse postWithChunkedBody(String url, byte[] body) {
@@ -160,6 +154,18 @@ public class WireMockTestClient {
     public WireMockResponse post(String url, HttpEntity entity, TestHttpHeader... headers) {
         HttpPost httpPost = new HttpPost(mockServiceUrlFor(url));
         httpPost.setEntity(entity);
+        return executeMethodAndConvertExceptions(httpPost, headers);
+    }
+
+    public WireMockResponse postJson(String url, String body, TestHttpHeader... headers) {
+        HttpPost httpPost = new HttpPost(mockServiceUrlFor(url));
+        httpPost.setEntity(new StringEntity(body, APPLICATION_JSON));
+        return executeMethodAndConvertExceptions(httpPost, headers);
+    }
+
+    public WireMockResponse postXml(String url, String body, TestHttpHeader... headers) {
+        HttpPost httpPost = new HttpPost(mockServiceUrlFor(url));
+        httpPost.setEntity(new StringEntity(body, APPLICATION_XML));
         return executeMethodAndConvertExceptions(httpPost, headers);
     }
 
@@ -173,74 +179,47 @@ public class WireMockTestClient {
         return executeMethodAndConvertExceptions(httpPatch);
     }
 
+    public WireMockResponse delete(String url) {
+        HttpDelete httpDelete = new HttpDelete(mockServiceUrlFor(url));
+        return executeMethodAndConvertExceptions(httpDelete);
+    }
+
     public WireMockResponse options(String url, TestHttpHeader... headers) {
         HttpOptions httpOptions = new HttpOptions(mockServiceUrlFor(url));
         return executeMethodAndConvertExceptions(httpOptions, headers);
     }
 
     public void addResponse(String responseSpecJson) {
-        int status = postJsonAndReturnStatus(newMappingUrl(), responseSpecJson);
-        if (status != HTTP_CREATED) {
+        addResponse(responseSpecJson, "utf-8");
+    }
+
+    public void addResponse(String responseSpecJson, String charset) {
+        int status = postJsonAndReturnStatus(newMappingUrl(), responseSpecJson, charset);
+        if(status != HTTP_CREATED) {
             throw new RuntimeException("Returned status code was " + status);
         }
     }
+
     public void editMapping(String mappingSpecJson) {
         int status = postJsonAndReturnStatus(editMappingUrl(), mappingSpecJson);
-        if (status != HTTP_NO_CONTENT) {
-            throw new RuntimeException("Returned status code was " + status);
-        }
-    }
-
-    public void removeMapping(String mappingSpecJson) {
-        int status = postJsonAndReturnStatus(removeMappingUrl(), mappingSpecJson);
-        if (status != HTTP_OK) {
-            throw new RuntimeException("Returned status code was " + status);
-        }
-    }
-
-    public void resetMappings() {
-        int status = postEmptyBodyAndReturnStatus(resetUrl());
-        if (status != HTTP_OK) {
+        if(status != HTTP_NO_CONTENT) {
             throw new RuntimeException("Returned status code was " + status);
         }
     }
 
     public void resetDefaultMappings() {
         int status = postEmptyBodyAndReturnStatus(resetDefaultMappingsUrl());
-        if (status != HTTP_OK) {
+        if(status != HTTP_OK) {
             throw new RuntimeException("Returned status code was " + status);
         }
     }
 
-    private int postJsonAndReturnStatus(String url, String json) {
-        HttpPost post = new HttpPost(url);
-        try {
-            if (json != null) {
-                post.setEntity(new StringEntity(json, ContentType.create(JSON.toString(), "utf-8")));
-            }
-            HttpResponse httpResponse = httpClient().execute(post);
-            return httpResponse.getStatusLine().getStatusCode();
-        } catch (RuntimeException re) {
-            throw re;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public String snapshot(String snapshotSpecJson) {
+        WireMockResponse response = postJson(LOCAL_WIREMOCK_SNAPSHOT_PATH, snapshotSpecJson);
+        if(response.statusCode() != HTTP_OK) {
+            throw new RuntimeException("Returned status code was " + response.statusCode());
         }
-    }
-
-    private int postEmptyBodyAndReturnStatus(String url) {
-        return postJsonAndReturnStatus(url, null);
-    }
-
-    private WireMockResponse executeMethodAndConvertExceptions(HttpUriRequest httpRequest, TestHttpHeader... headers) {
-        try {
-            for (TestHttpHeader header : headers) {
-                httpRequest.addHeader(header.getName(), header.getValue());
-            }
-            HttpResponse httpResponse = httpClient().execute(httpRequest);
-            return new WireMockResponse(httpResponse);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        return response.content();
     }
 
     public WireMockResponse getWithPreemptiveCredentials(String url, int port, String username, String password) {
@@ -267,24 +246,81 @@ public class WireMockTestClient {
         return executeMethodAndConvertExceptions(httpRequest, headers);
     }
 
+    private String mockServiceUrlFor(String path) {
+        return String.format(LOCAL_WIREMOCK_ROOT, address, port, path);
+    }
+
+    private String newMappingUrl() {
+        return String.format(LOCAL_WIREMOCK_NEW_RESPONSE_URL, address, port);
+    }
+
+    private String editMappingUrl() {
+        return String.format(LOCAL_WIREMOCK_EDIT_RESPONSE_URL, address, port);
+    }
+
+    private String resetDefaultMappingsUrl() {
+        return String.format(LOCAL_WIREMOCK_RESET_DEFAULT_MAPPINS_URL, address, port);
+    }
+
+    private WireMockResponse requestWithBody(
+            HttpEntityEnclosingRequestBase request, String body, String contentType, TestHttpHeader... headers) {
+        request.setEntity(new StringEntity(body, ContentType.create(contentType, "utf-8")));
+        return executeMethodAndConvertExceptions(request, headers);
+    }
+
+    private int postJsonAndReturnStatus(String url, String json) {
+        return postJsonAndReturnStatus(url, json, "utf-8");
+    }
+
+    private int postJsonAndReturnStatus(String url, String json, String charset) {
+        HttpPost post = new HttpPost(url);
+        try {
+            if(json != null) {
+                post.setEntity(new StringEntity(json, ContentType.create(JSON.toString(), charset)));
+            }
+            HttpResponse httpResponse = httpClient().execute(post);
+            return httpResponse.getStatusLine().getStatusCode();
+        } catch (RuntimeException re) {
+            throw re;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int postEmptyBodyAndReturnStatus(String url) {
+        return postJsonAndReturnStatus(url, null);
+    }
+
+    private WireMockResponse executeMethodAndConvertExceptions(HttpUriRequest httpRequest, TestHttpHeader... headers) {
+        try {
+            for (TestHttpHeader header : headers) {
+                httpRequest.addHeader(header.getName(), header.getValue());
+            }
+            HttpResponse httpResponse = httpClient().execute(httpRequest);
+            return new WireMockResponse(httpResponse);
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+
     private static HttpClient httpClient() {
         return HttpClientBuilder.create()
-            .disableAuthCaching()
-            .disableAutomaticRetries()
-            .disableCookieManagement()
-            .disableRedirectHandling()
-            .disableContentCompression()
-            .build();
+                .disableAuthCaching()
+                .disableAutomaticRetries()
+                .disableCookieManagement()
+                .disableRedirectHandling()
+                .disableContentCompression()
+                .build();
     }
 
     private static HttpClient httpClientWithPreemptiveAuth(HttpHost target, String username, String password) {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-            new AuthScope(target),
-            new UsernamePasswordCredentials(username, password));
+                new AuthScope(target),
+                new UsernamePasswordCredentials(username, password));
 
         return HttpClients.custom()
-            .setDefaultCredentialsProvider(credsProvider)
-            .build();
+                .setDefaultCredentialsProvider(credsProvider)
+                .build();
     }
 }
