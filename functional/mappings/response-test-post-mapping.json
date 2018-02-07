@@ -1,13 +1,13 @@
 {
-    "request": {
-        "urlPattern": "/resource?startDate=2018-02-01&endDate=2018-02-28&product-code=10&product-code=j1j1j1",
-        "method": "POST"
-    },
-    "response": {
-        "status": 200,
-        "bodyFileName": "response-test-body-with-query-params.vm",
-        "headers": {
-            "Content-Type": "application/json"
-        }
+  "request": {
+    "urlPattern": "/resource",
+    "method": "POST"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "response-test-body-for-post.vm",
+    "headers": {
+      "Content-Type": "application/json"
     }
+  }
 }
