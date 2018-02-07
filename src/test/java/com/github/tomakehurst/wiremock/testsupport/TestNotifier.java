@@ -24,12 +24,10 @@ import java.util.List;
 
 public class TestNotifier implements Notifier {
 
+    private final ConsoleNotifier consoleNotifier = new ConsoleNotifier(true);
     private List<String> info;
     private List<String> error;
-
     private Notifier previousNotifier;
-
-    private final ConsoleNotifier consoleNotifier = new ConsoleNotifier(true);
 
     public TestNotifier() {
         this.info = new ArrayList<>();
@@ -65,9 +63,13 @@ public class TestNotifier implements Notifier {
         consoleNotifier.error(message, t);
     }
 
-    public List<String> getInfoMessages() { return info; }
+    public List<String> getInfoMessages() {
+        return info;
+    }
 
-    public List<String> getErrorMessages() { return error; }
+    public List<String> getErrorMessages() {
+        return error;
+    }
 
     public void reset() {
         info.clear();

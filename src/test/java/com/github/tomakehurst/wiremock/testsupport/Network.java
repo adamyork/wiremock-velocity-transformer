@@ -26,7 +26,7 @@ public class Network {
             socket.close();
 
             return result;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
