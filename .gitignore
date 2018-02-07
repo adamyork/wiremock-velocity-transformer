@@ -20,3 +20,4 @@ bin/
 gradlew
 gradlew.bat
 out/
+*.iml
