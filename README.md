@@ -44,11 +44,9 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 ## To use in conjunction with Wiremock Standalone Jar
 
-- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/2.0/wiremock-velocity-transformer-standalone-2.0.jar)
+- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/2.0-release/wiremock-velocity-transformer-standalone-2.0.jar)
 
-- Download the Wiremock standalone jar from :
-
-[http://wiremock.org/docs/running-standalone/](http://wiremock.org/docs/running-standalone/)
+- Download the Wiremock standalone jar from [http://wiremock.org/docs/running-standalone/](http://wiremock.org/docs/running-standalone/)
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 Windows
