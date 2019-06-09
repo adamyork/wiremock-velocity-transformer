@@ -6,6 +6,7 @@ transformer used to render velocity templates for stubbed responses.
 ## To use within a custom Wiremock Java implementation
 
 - Include wiremock-velocity-transformer in your project
+- Requires jdk 8+ 
 
 Maven
 
@@ -13,7 +14,7 @@ Maven
 <dependency>
   <groupId>com.github.adamyork</groupId>
   <artifactId>wiremock-velocity-transformer</artifactId>
-  <version>1.5</version>
+  <version>=2.0</version>
 </dependency>
 ````
 
@@ -21,7 +22,7 @@ Gradle
 
 ````
 dependencies {
-    compile group: "com.github.adamyork", name: "wiremock-velocity-transformer", version: "1.5"
+    compile group: "com.github.adamyork", name: "wiremock-velocity-transformer", version: "2.0"
 }
 ````
 
@@ -29,21 +30,21 @@ dependencies {
 
 - Register the velocity transformer with wiremock. For example :
 
-````java
+````
 new WireMockServer(wireMockConfig().extensions("com.github.adamyork.wiremock.transformer.VelocityResponseTransformer",));
-
+````
 or
-
+````
 new WireMockServer(wireMockConfig().extensions(VelocityResponseTransformer.class));
-
+````
 or 
-
+````
 new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()));
 ````
 
-## To use in conjuction with Wiremock Standalone Jar
+## To use in conjunction with Wiremock Standalone Jar
 
-- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/1.3/wiremock-velocity-transformer-standalone-1.2.jar)
+- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/2.0/wiremock-velocity-transformer-standalone-2.0.jar)
 
 - Download the Wiremock standalone jar from :
 
@@ -52,18 +53,20 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 Windows
 ````
-java -cp "wiremock-standalone-2.14.0.jar;wiremock-velocity-transformer-standalone-1.5.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-standalone-2.32.2.jar;wiremock-velocity-transformer-standalone-2.0.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
 ````
 Unix
 ````
-java -cp "wiremock-standalone-2.14.0.jar:wiremock-velocity-transformer-standalone-1.5.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-standalone-2.32.2.jar:wiremock-velocity-transformer-standalone-2.0.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
 ````
 
 ## Notes on velocity templates
 
 - all Generic Velocity tools are available to the Velocity context
 - request bodies are available via the context
-- query parameters via the context. each query param is post-fixed with a number.
+- query parameters via the context.
+- if multiple query parameters are found with the same name, 
+they will referenced by a postfix; and index start at 0. see example below
 
 Below is an example of a template, assuming a uri of "/resource?startDate=2018-02-01&endDate=2018-02-28&product-code=10&product-code=j1j1j1"
 ````
@@ -86,10 +89,10 @@ Below is an example of a template, assuming a uri of "/resource?startDate=2018-0
     #end
     "date" : "$date.getMonth()",
     "math" : "$math.floor(2.5)",
-    "startDate1" : "$startDate1",
-    "endDate1" : "$endDate1",
-    "productCode1" : "$productcode1",
-    "productCode2" : "$productcode2"
+    "startDate" : "$startDate",
+    "endDate" : "$endDate",
+    "productCode0" : "$productcode0",
+    "productCode1" : "$productcode1"
 }
 ````
 

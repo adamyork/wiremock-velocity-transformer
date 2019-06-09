@@ -1,13 +1,13 @@
 {
-  "request": {
-    "urlPattern": "/resource",
-    "method": "POST"
-  },
-  "response": {
-    "status": 200,
-    "bodyFileName": "response-test-body-for-post.vm",
-    "headers": {
-      "Content-Type": "application/json"
+    "request": {
+        "url": "/resource",
+        "method": "POST"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "response-test-body-for-post.vm",
+        "headers": {
+            "Content-Type": "application/json"
+        }
     }
-  }
 }

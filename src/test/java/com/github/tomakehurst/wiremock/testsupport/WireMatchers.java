@@ -17,6 +17,7 @@ package com.github.tomakehurst.wiremock.testsupport;
 
 import com.github.tomakehurst.wiremock.common.TextFile;
 import com.github.tomakehurst.wiremock.http.HttpHeader;
+import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
@@ -26,10 +27,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.*;
 import org.hamcrest.core.IsEqual;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -55,58 +54,58 @@ import static java.util.Arrays.asList;
 
 public class WireMatchers {
 
-    public static Matcher<String> equalToJson(final String expectedJson) {
-        return new TypeSafeMatcher<String>() {
+	public static Matcher<String> equalToJson(final String expectedJson) {
+		return new TypeSafeMatcher<String>() {
 
-            @Override
-            public void describeTo(Description desc) {
+			@Override
+			public void describeTo(Description desc) {
                 desc.appendText("Expected:\n" + expectedJson);
-            }
+			}
 
-            @Override
-            public boolean matchesSafely(String actualJson) {
-                try {
-                    JSONAssert.assertEquals(expectedJson, actualJson, JSONCompareMode.STRICT);
-                    return true;
-                } catch (Throwable e) {
-                    return false;
-                }
-            }
+			@Override
+			public boolean matchesSafely(String actualJson) {
+				try {
+					JSONAssert.assertEquals(expectedJson, actualJson, JSONCompareMode.STRICT);
+					return true;
+				} catch (Throwable e) {
+					return false;
+				}
+			}
 
-        };
-    }
+		};
+	}
 
-    public static Matcher<String> equalToJson(final String expectedJson, final JSONCompareMode jsonCompareMode) {
-        return new TypeSafeMatcher<String>() {
+	public static Matcher<String> equalToJson(final String expectedJson, final JSONCompareMode jsonCompareMode) {
+		return new TypeSafeMatcher<String>() {
 
-            @Override
-            public void describeTo(Description desc) {
-                desc.appendText("Expected:\n" + expectedJson);
-            }
+			@Override
+			public void describeTo(Description desc) {
+				desc.appendText("Expected:\n" + expectedJson);
+			}
 
-            @Override
-            public boolean matchesSafely(String actualJson) {
-                try {
-                    JSONAssert.assertEquals(expectedJson, actualJson, jsonCompareMode);
-                    return true;
-                } catch (Throwable e) {
-                    return false;
-                }
-            }
+			@Override
+			public boolean matchesSafely(String actualJson) {
+				try {
+					JSONAssert.assertEquals(expectedJson, actualJson, jsonCompareMode);
+					return true;
+				} catch (Throwable e) {
+					return false;
+				}
+			}
+			
+		};
+	}
 
-        };
-    }
-
-    public static Matcher<String> equalToXml(final String expected) {
-        return new TypeSafeMatcher<String>() {
+	public static Matcher<String> equalToXml(final String expected) {
+	    return new TypeSafeMatcher<String>() {
             @Override
             protected boolean matchesSafely(String value) {
                 Diff diff = DiffBuilder.compare(Input.from(expected))
-                        .withTest(value)
-                        .withComparisonController(ComparisonControllers.StopWhenDifferent)
-                        .ignoreWhitespace()
-                        .ignoreComments()
-                        .build();
+                    .withTest(value)
+                    .withComparisonController(ComparisonControllers.StopWhenDifferent)
+                    .ignoreWhitespace()
+                    .ignoreComments()
+                    .build();
 
                 return !diff.hasDifferences();
             }
@@ -120,69 +119,77 @@ public class WireMatchers {
 
     public static Matcher<String> matches(final String regex) {
         return new TypeSafeMatcher<String>() {
-
+    
             @Override
             public void describeTo(Description description) {
                 description.appendText("Should match " + regex);
-
+                
             }
-
+    
             @Override
             public boolean matchesSafely(String actual) {
                 return actual.matches(regex);
             }
-
+            
         };
     }
 
     public static <T> Matcher<Iterable<T>> hasExactly(final Matcher<T>... items) {
-        return new TypeSafeMatcher<Iterable<T>>() {
+    	return new TypeSafeMatcher<Iterable<T>>() {
 
-            @Override
-            public void describeTo(Description desc) {
-                desc.appendText("Collection must match exactly");
-            }
+			@Override
+			public void describeTo(Description desc) {
+				desc.appendText("Collection must match exactly");
+			}
 
-            @Override
-            public boolean matchesSafely(Iterable<T> actual) {
-                Iterator<T> actualIter = actual.iterator();
-                for (Matcher<T> matcher : items) {
-                    if(!matcher.matches(actualIter.next())) {
-                        return false;
-                    }
-                }
-
-                return !actualIter.hasNext();
-            }
-
-        };
+			@Override
+			public boolean matchesSafely(Iterable<T> actual) {
+				Iterator<T> actualIter = actual.iterator();
+				for (Matcher<T> matcher: items) {
+					if (!matcher.matches(actualIter.next())) {
+						return false;
+					}
+				}
+				
+				return !actualIter.hasNext();
+			}
+    		
+    	};
     }
-
+    
     public static <T> Matcher<Iterable<T>> hasExactlyIgnoringOrder(final Matcher<T>... items) {
-        return new TypeSafeMatcher<Iterable<T>>() {
+    	return new TypeSafeMatcher<Iterable<T>>() {
 
-            @Override
-            public void describeTo(Description desc) {
-                desc.appendText("Collection elements must match, but don't have to be in the same order.");
-            }
+			@Override
+			public void describeTo(Description desc) {
+				desc.appendText("Collection elements must match, but don't have to be in the same order.");
+			}
 
-            @Override
-            public boolean matchesSafely(Iterable<T> actual) {
-                if(size(actual) != items.length) {
-                    return false;
-                }
-
-                for (final Matcher<T> matcher : items) {
-                    if(find(actual, isMatchFor(matcher), null) == null) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        };
+			@Override
+			public boolean matchesSafely(Iterable<T> actual) {
+				if (size(actual) != items.length) {
+					return false;
+				}
+				
+				for (final Matcher<T> matcher: items) {
+					if (find(actual, isMatchFor(matcher), null) == null) {
+						return false;
+					}
+				}
+				
+				return true;
+			}
+    	};
     }
-
+    
+    private static <T> Predicate<T> isMatchFor(final Matcher<T> matcher) {
+    	return new Predicate<T>() {
+			public boolean apply(T input) {
+				return matcher.matches(input);
+			}
+		};
+    }
+    
     public static Matcher<TextFile> fileNamed(final String name) {
         return new TypeSafeMatcher<TextFile>() {
 
@@ -195,7 +202,7 @@ public class WireMatchers {
             public boolean matchesSafely(TextFile textFile) {
                 return textFile.name().endsWith(name);
             }
-
+            
         };
     }
 
@@ -267,18 +274,18 @@ public class WireMatchers {
                     }
                 });
 
-                if(files.size() == 0) {
+                if (files.size() == 0) {
                     mismatchDescription.appendText("there were no files in " + path);
                 }
 
-                if(!matched) {
+                if (!matched) {
                     String allFileContents = Joiner.on("\n\n").join(
-                            transform(files, new Function<File, String>() {
-                                @Override
-                                public String apply(File input) {
-                                    return fileContents(input);
-                                }
-                            })
+                        transform(files, new Function<File, String>() {
+                            @Override
+                            public String apply(File input) {
+                                return fileContents(input);
+                            }
+                        })
                     );
                     mismatchDescription.appendText(allFileContents);
                 }
@@ -302,6 +309,18 @@ public class WireMatchers {
                 return super.matches(actualValue.toString());
             }
         };
+    }
+
+    private static String normaliseLineBreaks(String s) {
+	    return s.replace("\n", lineSeparator());
+    }
+
+    private static String fileContents(File input) {
+        try {
+            return Files.toString(input, Charsets.UTF_8);
+        } catch (IOException e) {
+            return throwUnchecked(e, String.class);
+        }
     }
 
     public static Predicate<StubMapping> withUrl(final String url) {
@@ -360,25 +379,5 @@ public class WireMatchers {
                 return item.getScenarioName() != null;
             }
         };
-    }
-
-    private static <T> Predicate<T> isMatchFor(final Matcher<T> matcher) {
-        return new Predicate<T>() {
-            public boolean apply(T input) {
-                return matcher.matches(input);
-            }
-        };
-    }
-
-    private static String normaliseLineBreaks(String s) {
-        return s.replace("\n", lineSeparator());
-    }
-
-    private static String fileContents(File input) {
-        try {
-            return Files.toString(input, Charsets.UTF_8);
-        } catch (IOException e) {
-            return throwUnchecked(e, String.class);
-        }
     }
 }
