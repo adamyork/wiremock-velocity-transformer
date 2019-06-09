@@ -15,8 +15,8 @@
 #end
 "date" : "$date.getMonth()",
 "math" : "$math.floor(2.5)",
-"startDate1" : "$startDate1",
-"endDate1" : "$endDate1",
-"productCode1" : "$productcode1",
-"productCode2" : "$productcode2"
+"startDate" : "$startDate",
+"endDate" : "$endDate",
+"productCode1" : "$productcode0",
+"productCode2" : "$productcode1"
 }

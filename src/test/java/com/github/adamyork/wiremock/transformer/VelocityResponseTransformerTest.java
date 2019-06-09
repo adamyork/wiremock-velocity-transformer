@@ -187,10 +187,10 @@ public class VelocityResponseTransformerTest {
                 new TestHttpHeader("Accept-Encoding", "UTF-8"),
                 new TestHttpHeader("User-Agent", "Mozilla/5.0"));
         final WiremockResponseTestBody body = Json.read(response.content(), WiremockResponseTestBody.class);
-        assertEquals(body.getStartDate1(), "2018-02-01");
-        assertEquals(body.getEndDate1(), "2018-02-28");
-        assertEquals(body.getProductCode1(), "10");
-        assertEquals(body.getProductCode2(), "j1j1j1");
+        assertEquals(body.getStartDate(), "2018-02-01");
+        assertEquals(body.getEndDate(), "2018-02-28");
+        assertEquals(body.getProductCode0(), "10");
+        assertEquals(body.getProductCode1(), "j1j1j1");
     }
 
 }

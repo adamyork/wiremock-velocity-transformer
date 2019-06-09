@@ -1,5 +1,6 @@
 package com.github.adamyork.wiremock.transformer;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class WiremockResponseTestBody {
 
     private String requestAbsoluteUrl;
@@ -17,10 +18,10 @@ public class WiremockResponseTestBody {
     private String customProp2;
     private String date;
     private String math;
-    private String startDate1;
-    private String endDate1;
+    private String startDate;
+    private String endDate;
+    private String productCode0;
     private String productCode1;
-    private String productCode2;
 
     public String getRequestAbsoluteUrl() {
         return requestAbsoluteUrl;
@@ -142,20 +143,28 @@ public class WiremockResponseTestBody {
         this.math = math;
     }
 
-    public String getStartDate1() {
-        return startDate1;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStartDate1(final String startDate1) {
-        this.startDate1 = startDate1;
+    public void setStartDate(final String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getEndDate1() {
-        return endDate1;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setEndDate1(final String endDate1) {
-        this.endDate1 = endDate1;
+    public void setEndDate(final String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getProductCode0() {
+        return productCode0;
+    }
+
+    public void setProductCode0(final String productCode0) {
+        this.productCode0 = productCode0;
     }
 
     public String getProductCode1() {
@@ -165,13 +174,4 @@ public class WiremockResponseTestBody {
     public void setProductCode1(final String productCode1) {
         this.productCode1 = productCode1;
     }
-
-    public String getProductCode2() {
-        return productCode2;
-    }
-
-    public void setProductCode2(final String productCode2) {
-        this.productCode2 = productCode2;
-    }
-
 }

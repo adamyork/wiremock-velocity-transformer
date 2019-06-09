@@ -1,44 +1,29 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://oss.sonatype.org"
-        }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath group: 'org.ajoberstar', name: 'gradle-plugins', version: '0.1.1'
-
-    }
-}
-
-
-plugins {
-    id "eu.appsatori.fatjar" version "0.3"
-}
+group "com.github.adamyork"
+version "2.0"
 
 apply plugin: "java"
-apply plugin: "eu.appsatori.fatjar"
-apply plugin: "eclipse"
-apply plugin: "maven"
+apply plugin: "maven-publish"
 apply plugin: "signing"
 
-group = "com.github.adamyork"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-version = "1.5"
+repositories {
+    mavenCentral()
+}
 
-fatJar {
+task fatJar(type: Jar) {
     archiveName = "wiremock-velocity-transformer-standalone-" + fatJar.version + ".jar"
     manifest {
         attributes "Implementation-Title": "wiremock-velocity-transformer-standalone",
                 "Implementation-Version": version
     }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 task cleanFunctional(type: Delete) {
-    delete fileTree(dir: "functional", include: "*-velocity-transformer-*.jar", exclude: "wiremock-1.58-standalone.jar")
+    delete fileTree(dir: "functional", include: "*-velocity-transformer-*.jar")
 }
 
 task copyFunctional(type: Copy) {
@@ -78,21 +63,10 @@ artifacts {
     archives sourcesJar
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        url "https://repository.apache.org/content/repositories/snapshots"
-    }
-}
-
-signing {
-    sign configurations.archives
-}
-
 dependencies {
-    compile group: "org.apache.velocity", name: "velocity-engine-core", version: "2.0"
-    compile group: "org.apache.velocity", name: "velocity-tools-generic", version: "3.0-SNAPSHOT"
-    compile group: "com.github.tomakehurst", name: "wiremock", version: "2.14.0"
+    compile group: "org.apache.velocity", name: "velocity-engine-core", version: "2.1"
+    compile group: "org.apache.velocity.tools", name: "velocity-tools-generic", version: "3.0"
+    compile group: "com.github.tomakehurst", name: "wiremock-jre8", version: "2.23.2"
     compile group: "org.eclipse.jetty", name: "jetty-server", version: "9.2.22.v20170606"
     compile group: "org.eclipse.jetty", name: "jetty-servlet", version: "9.2.22.v20170606"
     compile group: "org.eclipse.jetty", name: "jetty-servlets", version: "9.2.22.v20170606"
@@ -109,10 +83,11 @@ dependencies {
     compile group: "net.sf.jopt-simple", name: "jopt-simple", version: "5.0.3"
     compile group: "org.apache.commons", name: "commons-lang3", version: "3.3.6"
     compile group: "com.flipkart.zjsonpatch", name: "zjsonpatch", version: "0.3.0"
+    compile group: "org.jooq", name: "jool", version: "0.9.12"
     compile("junit:junit:4.12") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
     }
-    compile 'com.github.jknack:handlebars:4.0.6', {
+    compile("com.github.jknack:handlebars:4.0.6") {
         exclude group: 'org.mozilla', module: 'rhino'
     }
     testCompile group: "org.hamcrest", name: "hamcrest-all", version: "1.3"
@@ -124,6 +99,8 @@ dependencies {
     testCompile group: "org.apache.httpcomponents", name: "httpmime", version: "4.5"
     testCompile group: "com.googlecode.jarjar", name: "jarjar", version: "1.3"
     testCompile group: "commons-io", name: "commons-io", version: "2.4"
+    testCompile group: "org.apache.velocity", name: "velocity-engine-core", version: "2.1"
+    testRuntime group: "org.apache.velocity.tools", name: "velocity-tools-generic", version: "3.0"
     testCompile("org.jmock:jmock:2.5.1") {
         exclude group: "junit", module: "junit-dep"
         exclude group: "org.hamcrest", module: "hamcrest-core"
@@ -137,45 +114,112 @@ dependencies {
     testRuntime "org.slf4j:slf4j-log4j12:1.7.12"
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
+signing {
+    sign configurations.archives
+}
 
-            beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment)
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+            groupId = "com.github.adamyork"
+            artifactId = "wiremock-velocity-transformer"
+            version "2.0"
+
+            from components.java
+
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = "pom.asc"
+                }
             }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            artifact(sourcesJar) {
+                classifier = "sources"
+            }
+            artifact(javadocJar) {
+                classifier = "javadoc"
             }
 
-            pom.project {
-                name "wiremock-velocity-transformer"
-                packaging "jar"
-                description "transformer used to render velocity templates for stubbed responses."
-                url "https://github.com/adamyork/wiremock-velocity-transformer"
-
-                scm {
-                    url "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
-                    connection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
-                    developerConnection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
-                }
-
-                licenses {
-                    license {
-                        name "The Apache Software License, Version 2.0"
-                        url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        distribution "repo"
+            project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
                     }
-                }
-
-                developers {
-                    developer {
-                        id "adamcyork"
-                        name "Adam York"
-                    }
+                    extension = "jar.asc"
                 }
             }
         }
+    }
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+    }
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        root.children().last() + {
+            resolveStrategy = DELEGATE_FIRST
+            name "wiremock-velocity-transformer"
+            description "transformer used to render velocity templates for stubbed responses"
+            url "https://github.com/adamyork/wiremock-velocity-transformer"
+            organization {
+                name "com.github.adamyork"
+                url "https://github.com/adamyork"
+            }
+            issueManagement {
+                system "GitHub"
+                url "https://github.com/adamyork/wiremock-velocity-transformer/issues"
+            }
+            licenses {
+                license {
+                    name "MIT"
+                    url "https://github.com/adamyork/wiremock-velocity-transformer/blob/master/LICENSE"
+                    distribution "repo"
+                }
+            }
+            scm {
+                url "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
+                connection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
+                developerConnection "scm:git@github.com:adamyork/wiremock-velocity-transformer.git"
+            }
+            developers {
+                developer {
+                    id "adamcyork"
+                    name "Adam York"
+                }
+            }
+        }
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal {
+        dependsOn project.tasks.signArchives
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository {
+        dependsOn project.tasks.signArchives
     }
 }
