@@ -113,7 +113,7 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
     }
 
     private Boolean templateDeclaredAndSpecifiesBodyFile(final ResponseDefinition response) {
-        return templateDeclared(response) && response.specifiesBodyFile();
+        return response.specifiesBodyFile() && templateDeclared(response);
     }
 
     private Boolean templateDeclared(final ResponseDefinition response) {
