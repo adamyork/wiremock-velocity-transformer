@@ -12,7 +12,6 @@ import net.minidev.json.parser.JSONParser;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.velocity.Template;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.ToolManager;
@@ -63,6 +62,7 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
                 .map(bool -> {
                     this.fileSource = files;
                     final VelocityEngine velocityEngine = new VelocityEngine();
+                    velocityEngine.setProperty("file.resource.loader.path", fileSource.getPath());
                     velocityEngine.init();
                     final ToolManager toolManager = new ToolManager();
                     toolManager.configure(ConfigurationUtils.GENERIC_DEFAULTS_PATH);
@@ -75,7 +75,7 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
                     contextWithHeadersBodyAndParams.put("requestAbsoluteUrl", request.getAbsoluteUrl());
                     contextWithHeadersBodyAndParams.put("requestUrl", request.getUrl());
                     contextWithHeadersBodyAndParams.put("requestMethod", request.getMethod());
-                    final String body = getRenderedBody(responseDefinition, contextWithHeadersBodyAndParams);
+                    final String body = getRenderedBody(responseDefinition, contextWithHeadersBodyAndParams, velocityEngine);
                     return ResponseDefinitionBuilder.like(responseDefinition).but()
                             .withBody(body)
                             .build();
@@ -145,9 +145,8 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
                 });
     }
 
-    private String getRenderedBody(final ResponseDefinition response, final Context context) {
-        final String templatePath = fileSource.getPath().concat("/" + response.getBodyFileName());
-        final Template template = Velocity.getTemplate(templatePath);
+    private String getRenderedBody(final ResponseDefinition response, final Context context, final VelocityEngine velocityEngine) {
+        final Template template = velocityEngine.getTemplate(response.getBodyFileName());
         final StringWriter writer = new StringWriter();
         template.merge(context, writer);
         return String.valueOf(writer.getBuffer());
