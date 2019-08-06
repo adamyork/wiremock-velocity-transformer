@@ -1,0 +1,10 @@
+{
+    "request": {
+        "url": "/resourceBody",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "body": "A response body instead of a bodyFileName"
+    }
+}

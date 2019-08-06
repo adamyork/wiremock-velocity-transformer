@@ -70,6 +70,20 @@ public class VelocityResponseTransformerTest {
         assertTrue(body.getRequestHeaderHost().contains("localhost:8089"));
         assertTrue(body.getRequestHeaderConnection().contains("keep-alive"));
     }
+    
+    @Test
+    public void testMappingWithBody() {
+        stubFor(get(urlEqualTo("/my/resource"))
+                .withHeader("Accept", equalTo("application/json"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("A response body instead of a bodyFileName")));
+        WireMockResponse response = client.get("/my/resource",
+                new TestHttpHeader("Accept", "application/json"));
+        System.out.println(response.content());
+        assertThat(response.statusCode(), equalTo(200));
+    }
 
     @Test
     public void testExtendedHeadersArePresent() {
