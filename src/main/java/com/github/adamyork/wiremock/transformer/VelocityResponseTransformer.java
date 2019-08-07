@@ -25,8 +25,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -117,9 +115,7 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
     }
 
     private Boolean templateDeclared(final ResponseDefinition response) {
-        final Pattern extension = Pattern.compile(".vm$");
-        final Matcher matcher = extension.matcher(response.getBodyFileName());
-        return matcher.find();
+        return response.getBodyFileName().endsWith(".vm");
     }
 
     private Context addHeadersToContext(final HttpHeaders headers, final Context context) {
