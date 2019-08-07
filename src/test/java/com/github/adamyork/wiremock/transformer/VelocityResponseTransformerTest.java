@@ -4,6 +4,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.common.Json;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.testsupport.TestHttpHeader;
 import com.github.tomakehurst.wiremock.testsupport.WireMockResponse;
 import com.github.tomakehurst.wiremock.testsupport.WireMockTestClient;
@@ -29,6 +31,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class VelocityResponseTransformerTest {
 
@@ -70,7 +73,7 @@ public class VelocityResponseTransformerTest {
         assertTrue(body.getRequestHeaderHost().contains("localhost:8089"));
         assertTrue(body.getRequestHeaderConnection().contains("keep-alive"));
     }
-    
+
     @Test
     public void testMappingWithBody() {
         stubFor(get(urlEqualTo("/my/resource"))
@@ -205,6 +208,16 @@ public class VelocityResponseTransformerTest {
         assertEquals(body.getEndDate(), "2018-02-28");
         assertEquals(body.getProductCode0(), "10");
         assertEquals(body.getProductCode1(), "j1j1j1");
+    }
+
+    @Test
+    public void templateProcessingIsNotAppliedWhenNotTemplate() {
+        final VelocityResponseTransformer transformer = new VelocityResponseTransformer();
+        final Request mockRequest = mock(Request.class);
+        final ResponseDefinition mockResponseDefinition = mock(ResponseDefinition.class);
+        when(mockResponseDefinition.getBodyFileName()).thenReturn(".json");
+        transformer.transform(mockRequest, mockResponseDefinition, null, null);
+        verify(mockRequest, never()).getBodyAsString();
     }
 
 }

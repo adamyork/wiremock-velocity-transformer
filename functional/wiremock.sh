@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp "wiremock-standalone-2.23.2.jar:wiremock-velocity-transformer-standalone-2.1.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-standalone-2.23.2.jar:wiremock-velocity-transformer-standalone-2.2.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer

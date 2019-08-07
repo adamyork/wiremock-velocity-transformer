@@ -1,5 +1,5 @@
 group "com.github.adamyork"
-version "2.1"
+version "2.2"
 
 apply plugin: "java"
 apply plugin: "maven-publish"
@@ -101,6 +101,7 @@ dependencies {
     testCompile group: "commons-io", name: "commons-io", version: "2.4"
     testCompile group: "org.apache.velocity", name: "velocity-engine-core", version: "2.1"
     testRuntime group: "org.apache.velocity.tools", name: "velocity-tools-generic", version: "3.0"
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
     testCompile("org.jmock:jmock:2.5.1") {
         exclude group: "junit", module: "junit-dep"
         exclude group: "org.hamcrest", module: "hamcrest-core"

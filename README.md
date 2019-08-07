@@ -44,18 +44,18 @@ new WireMockServer(wireMockConfig().extensions(new VelocityResponseTransformer()
 
 ## To use in conjunction with Wiremock Standalone Jar
 
-- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/2.1-release/wiremock-velocity-transformer-standalone-2.1.jar)
+- Download the [standalone velocity transformer jar ](https://github.com/adamyork/wiremock-velocity-transformer/releases/download/2.2-release/wiremock-velocity-transformer-standalone-2.2.jar)
 
 - Download the Wiremock standalone jar from [http://wiremock.org/docs/running-standalone/](http://wiremock.org/docs/running-standalone/)
 
 - From the command line **NOTE : Change the versions of the jars to match the one's you have downloaded.**
 Windows
 ````
-java -cp "wiremock-standalone-2.32.2.jar;wiremock-velocity-transformer-standalone-2.1.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-standalone-2.32.2.jar;wiremock-velocity-transformer-standalone-2.2.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
 ````
 Unix
 ````
-java -cp "wiremock-standalone-2.32.2.jar:wiremock-velocity-transformer-standalone-2.1.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
+java -cp "wiremock-standalone-2.32.2.jar:wiremock-velocity-transformer-standalone-2.2.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --verbose --extensions com.github.adamyork.wiremock.transformer.VelocityResponseTransformer
 ````
 
 ## Notes on velocity templates
