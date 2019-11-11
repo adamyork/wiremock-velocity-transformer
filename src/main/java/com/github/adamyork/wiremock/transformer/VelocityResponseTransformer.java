@@ -1,5 +1,7 @@
 package com.github.adamyork.wiremock.transformer;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.extension.Parameters;
@@ -7,8 +9,6 @@ import com.github.tomakehurst.wiremock.extension.ResponseDefinitionTransformer;
 import com.github.tomakehurst.wiremock.http.HttpHeaders;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.velocity.Template;
@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
  * library. Used for transforming the response body of a parameterized
  * velocity template.
  *
- * @author yorka012
+ * @author ayork
  */
 public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
 
@@ -131,14 +131,12 @@ public class VelocityResponseTransformer extends ResponseDefinitionTransformer {
         return Optional.of(body.isEmpty())
                 .filter(bool -> bool)
                 .map(bool -> context)
-                .orElseGet(() -> {
-                    final JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
-                    return Unchecked.supplier(() -> {
-                        final JSONObject json = (JSONObject) parser.parse(body);
-                        context.put("requestBody", json);
-                        return context;
-                    }).get();
-                });
+                .orElseGet(() -> Unchecked.supplier(() -> {
+                    final ObjectMapper objectMapper = new ObjectMapper();
+                    final JsonNode node = objectMapper.readTree(body);
+                    context.put("requestBody", node);
+                    return context;
+                }).get());
     }
 
     private String getRenderedBody(final ResponseDefinition response, final Context context, final VelocityEngine velocityEngine) {

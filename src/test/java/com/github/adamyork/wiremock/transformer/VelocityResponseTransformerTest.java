@@ -12,16 +12,13 @@ import com.github.tomakehurst.wiremock.testsupport.WireMockTestClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -188,6 +185,34 @@ public class VelocityResponseTransformerTest {
         assertEquals(map.get("someKey"), "someValue");
         assertNotNull(body.getRequestBodySomeKeyValue());
         assertEquals(body.getRequestBodySomeKeyValue(), "someValue");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void postBodyArrayProcessedInTemplate() {
+        stubFor(post(urlEqualTo("/my/resource/array"))
+                .withHeader("Accept", equalTo("application/json"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBodyFile("response-test-body-for-post-array.vm")));
+        final List<String> arrayBody = new ArrayList<>();
+        arrayBody.add("test123");
+        final JSONArray jsonArray = new JSONArray(arrayBody);
+        final HttpEntity httpEntity = new StringEntity(jsonArray.toString(), ContentType.create("application/json", "utf-8"));
+        WireMockResponse response = client.post("/my/resource/array",
+                httpEntity,
+                new TestHttpHeader("Accept", "application/json"),
+                new TestHttpHeader("Accept-Language", "en-US"),
+                new TestHttpHeader("Accept-Encoding", "UTF-8"),
+                new TestHttpHeader("User-Agent", "Mozilla/5.0"));
+        final WiremockResponseTestBody body = Json.read(response.content(), WiremockResponseTestBody.class);
+        assertNotNull(body.getRequestBody());
+        assertTrue(body.getRequestBody() instanceof ArrayList);
+        final List<String> list = (List<String>) body.getRequestBody();
+        assertEquals(list.get(0), "test123");
+        assertNotNull(body.getRequestBodySomeKeyValue());
+        assertEquals(body.getRequestBodySomeKeyValue(), "test123");
     }
 
     @Test

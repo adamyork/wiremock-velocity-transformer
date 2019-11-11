@@ -1,0 +1,13 @@
+{
+    "request": {
+        "url": "/resource/array",
+        "method": "POST"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "response-test-body-for-post-array.vm",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
