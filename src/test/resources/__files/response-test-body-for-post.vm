@@ -1,7 +1,7 @@
 {
 "requestAbsoluteUrl" : "$requestAbsoluteUrl",
 "requestBody" : $requestBody,
-"requestBodySomeKeyValue" : "$requestBody.someKey",
+"requestBodySomeKeyValue" : $requestBody.someKey,
 "requestMethod" : "$requestMethod",
 "requestHeaderHost" : "$requestHeaderHost",
 "requestHeaderUserAgent" : "$requestHeaderUserAgent",
